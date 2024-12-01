@@ -1,0 +1,20 @@
+﻿<input type="button"
+       value="Delete"
+       style="width:100px"
+       class="btn btn-danger"
+       onclick="event.stopPropagation();" />
+
+@code {
+    [Parameter]
+    public int ProductId { get; set; }
+
+    // private void RemoveProduct(int id)
+    // {
+    //     var productToRemove = _productList.FirstOrDefault(product => product.Id == id);
+
+    //     if (productToRemove != null)
+    //     {
+    //         _productList.Remove(productToRemove);
+    //     }
+    // }
+}
