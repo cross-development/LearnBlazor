@@ -1,0 +1,27 @@
+﻿@page "/learn-blazor/parent-component"
+
+<h3>ParentComponent</h3>
+
+@* In case we need to pass more than one parameter with the same type, we need to specify a name for each parameter *@
+<CascadingValue Value="_messageForGrandChild" Name="Message">
+    <CascadingValue Value="_luckyNumber" Name="LuckyNumber">
+        <ChildComponent Title="This title is passed as a parameter from the Parent Component" OnButtonClick="ShowMessage">
+            <Children>Some text between custom child content</Children>
+
+            <ChildContent>Some text between the Tags from Parent Component</ChildContent>
+        </ChildComponent>
+    </CascadingValue>
+</CascadingValue>
+
+<p>@_messageText</p>
+
+@code {
+    private string _messageForGrandChild = "This is passed from Parent Component to Grand Child";
+    private string _messageText = string.Empty;
+    private string _luckyNumber = "7";
+
+    private void ShowMessage()
+    {
+        _messageText = "Button inside child component was clicked";
+    }
+}
