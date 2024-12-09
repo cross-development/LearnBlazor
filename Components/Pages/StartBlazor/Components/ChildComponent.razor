@@ -1,4 +1,8 @@
-﻿<div>
+﻿@using LearnBlazor.Helpers
+
+@inject JSRuntime JsRuntime
+
+<div>
     <div class="alert alert-info">
         <p>@Title</p>
     </div>
@@ -27,4 +31,9 @@
 
     [Parameter]
     public EventCallback OnButtonClick { get; set; }
+
+    public async Task ToasterSuccess()
+    {
+        await JsRuntime.ToasterSuccess("Success notification");
+    }
 }
