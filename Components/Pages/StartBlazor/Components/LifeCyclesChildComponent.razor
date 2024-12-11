@@ -1,0 +1,28 @@
+﻿<h3>LifeCyclesChildComponent</h3>
+
+@foreach (var item in _eventType)
+{
+    <p>@item</p>
+    <hr />
+}
+
+@code {
+    private readonly List<string> _eventType = new List<string>();
+
+    [Parameter]
+    public int CountValue { get; set; }
+
+    // OnInitialized is executed when the component is completely loaded
+    protected override void OnInitialized()
+    {
+        _eventType.Add("OnInitialized CHILD is called");
+    }
+
+    // OnParametersSet is called when a component is first initialized,
+    // and each time new or updated parameters are received from parent in the render tree
+    // Will be executed after OnInitialized and OnInitializedAsync and every time CountValue is being changed
+    protected override void OnParametersSet()
+    {
+        _eventType.Add("OnParametersSet CHILD is called");
+    }
+}

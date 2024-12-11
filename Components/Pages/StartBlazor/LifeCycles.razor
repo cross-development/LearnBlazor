@@ -1,0 +1,116 @@
+﻿@page "/life-cycles"
+
+@using System.Threading
+
+<PageTitle>Learn Routing</PageTitle>
+
+<h3 class="text-success">Blazor LifeCycle</h3>
+
+<p role="status">Current count: @_currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+<br />
+
+<p>@_count</p>
+
+<button class="btn btn-primary" @onclick="StartCountdown">Click me</button>
+
+<div class="border">
+    <LifeCyclesChildComponent CountValue="@_currentCount" />
+</div>
+
+@foreach (var item in _eventType)
+{
+    <p>@item</p>
+    <hr />
+}
+
+@code {
+    private int _currentCount = 0;
+    private int _count = 5;
+    private readonly List<string> _eventType = new List<string>();
+
+    // OnInitialized is executed when the component is completely loaded
+    protected override void OnInitialized()
+    {
+        _eventType.Add("OnInitialized is called");
+    }
+
+    // OnInitializedAsync is executed when the component is completely loaded
+    // Async version of this cycle is called after non-async version (even if we remove await delay)
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(500);
+
+        _eventType.Add("OnInitializedAsync is called");
+    }
+
+    // OnParametersSet is called when a component is first initialized,
+    // and each time new or updated parameters are received from parent in the render tree
+    // Will be executed after OnInitialized and OnInitializedAsync
+    protected override void OnParametersSet()
+    {
+        _eventType.Add("OnParametersSet is called");
+    }
+
+    // OnParametersSet is called when a component is first initialized,
+    // and each time new or updated parameters are received from parent in the render tree
+    // Will be executed after OnInitialized and OnInitializedAsync
+    protected override async Task OnParametersSetAsync()
+    {
+        await Task.Delay(500);
+
+        _eventType.Add("OnParametersSetAsync is called");
+    }
+
+
+    // OnAfterRender - we can expect that all the elements and component references are already populated.
+    // When we have to perform any action, such as attaching an event listener that requires the element of the component to be rendered in DOM
+    // And for JS libraries initialization
+    protected override void OnAfterRender(bool firstRender)
+    {
+        _currentCount = firstRender ? 100 : 200;
+
+        _eventType.Add("OnAfterRender is called");
+    }
+
+    // Async version of the OnAfterRender, is called after the OnAfterRender
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await Task.Delay(500);
+
+        _eventType.Add("OnAfterRenderAsync is called");
+    }
+
+    // Will return a boolean value. If that's true, that means Blazor has to refresh the UI.
+    // If that is false, that means the changes that have been made are not being reflected on the UI.
+    protected override bool ShouldRender()
+    {
+        _eventType.Add("ShouldRender is called");
+
+        return true;
+    }
+
+    private void IncrementCount()
+    {
+        _currentCount++;
+    }
+
+    private void StartCountdown()
+    {
+        var timer = new Timer(TimeCallback, null, 1000, 10000);
+    }
+
+    private void TimeCallback(object? state)
+    {
+        if (_count > 0)
+        {
+            _count--;
+
+            // This method notifies the component that its state has changed.
+            // It's called after all the lifecycle methods have been called.
+            InvokeAsync(StateHasChanged);
+        }
+    }
+}
